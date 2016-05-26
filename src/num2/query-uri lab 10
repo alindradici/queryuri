@@ -1,0 +1,135 @@
+//creare tabel user
+
+CREATE TABLE facebook_user
+(
+  user_name character(20),
+  parola character(20),
+  varsta integer,
+  orasul character(20),
+  blocat boolean,
+  id bigserial NOT NULL,
+  CONSTRAINT user_pk PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE facebook_user
+  OWNER TO fasttrackit_dev;
+
+//populare tabel user
+
+INSERT INTO facebook_user (user_name,parola,varsta,orasul,blocat) VALUES
+('marian','developer',18,'timisoara',true),
+('ionel','catel123',32,'cluj',false),
+('abigail','iLoveMedSchool',21,'bistrita',true),
+('elena','car02',25,'oradea',true),
+('adriana','goodGirl',45,'vaslui',false),
+('maria','cioban12',30,'beclean',true),
+('andrei','gamer99',25,'oradea',true),
+('naomi','baggirk',45,'vaslui',false),
+('mark','fallout4',30,'beclean',true)
+
+//creare tabel postare
+
+CREATE TABLE postare
+(
+  mesaj character(20),
+  data_postarii date,
+  id integer
+  CONSTRAINT postare_pk PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE postare
+  OWNER TO fasttrackit_dev;
+
+//populare tabel postare
+
+INSERT INTO postare (mesaj,data_postarii,id) VALUES
+('blah blah blah','20160530',2),
+('La multi ani','20160516',2),
+('frumoasa poza','20160519',5),
+('ce mai face','20160502',2),
+('intru in politica','20160720',7),
+('check this out','20160316',1),
+('lumea face politica','20160620',3),
+('party at my place','20160721',1),
+('I am home alone','20160822',3)
+
+//postarile lui ionel
+
+SELECT mesaj,data_postarii
+FROM postare
+WHERE postare.id=2;
+
+//afisare useri
+
+SELECT user_name
+FROM facebook_user
+
+//useri care nu sunt blocati
+
+SELECT user_name
+FROM facebook_user
+WHERE blocat = true
+
+//userul cu cea mai mica varsta
+
+SELECT user_name
+FROM facebook_user
+WHERE varsta = (SELECT MIN(varsta) FROM facebook_user)
+
+//cu varste cuprinse intre 23 si 33 in ordine crescatoare
+
+SELECT user_name
+FROM facebook_user
+WHERE varsta>23 AND varsta<33
+ORDER BY varsta ASC
+
+//media varstei userilor blocati
+
+SELECT AVG (varsta)
+FROM facebook_user
+WHERE blocat=true
+
+
+//useri neblocati din cluj
+
+SELECT user_name
+FROM facebook_user
+WHERE blocat = false AND orasul = 'cluj'
+
+
+//postarile userului din bistrita cu varsta peste 18 si blocati(cerinta 8)
+
+SELECT postare.mesaj
+FROM postare
+INNER JOIN facebook_user
+ON facebook_user.id=postare.id
+WHERE facebook_user.orasul = 'bistrita' AND facebook_user.blocat = true AND facebook_user.varsta > 18
+
+
+//user care incepe cu m si a postat intrun anumit interval de timp
+
+SELECT user_name
+FROM facebook_user
+JOIN postare
+ON facebook_user.id=postare.id
+WHERE user_name LIKE 'm%' AND (postare.data_postarii >'20160301' AND postare.data_postarii<'20160701' )
+
+//postarile ordonate descrescator dupa pata postarii
+
+SELECT mesaj
+FROM postare
+JOIN facebook_user
+ON facebook_user.id=postare.id
+ORDER BY postare.data_postarii DESC
+
+//sterge postare utilizator sub 25 de ani si a carui postare contine cuvantul politica
+
+DELETE postare
+FROM postare
+INNER JOIN facebook_user
+ON postare.id = facebook_user.id
+WHERE facebook_user.user_name <25 AND postare.mesaj = '%politica%'
