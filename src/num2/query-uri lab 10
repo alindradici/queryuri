@@ -72,7 +72,7 @@ FROM facebook_user
 
 SELECT user_name
 FROM facebook_user
-WHERE blocat = true
+WHERE blocat = false
 
 //userul cu cea mai mica varsta
 
