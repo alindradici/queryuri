@@ -59,9 +59,11 @@ INSERT INTO postare (mesaj,data_postarii,id) VALUES
 
 //postarile lui ionel
 
-SELECT mesaj,data_postarii
+SELECT postare.mesaj
 FROM postare
-WHERE postare.id=2;
+JOIN facebook_user
+ON facebook_user.id=postare.id
+WHERE facebook_user.user_name = 'ionel'
 
 //afisare useri
 
