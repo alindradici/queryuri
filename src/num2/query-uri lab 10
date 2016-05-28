@@ -57,7 +57,7 @@ INSERT INTO postare (mesaj,data_postarii,id) VALUES
 ('party at my place','20160721',1),
 ('I am home alone','20160822',3)
 
-//postarile lui ionel
+//postarile lui Ionel
 
 SELECT postare.mesaj
 FROM postare
